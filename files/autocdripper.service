@@ -1,0 +1,10 @@
+[Unit]
+Description=Auto CD ripper
+
+[Service]
+Type=oneshot
+User=ansible-nas
+ExecStart=/usr/share/autocdripper/cdripper.sh
+
+[Install]
+WantedBy=multi-user.target

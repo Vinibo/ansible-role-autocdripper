@@ -1,0 +1,49 @@
+---
+- name: Install required packages
+  package:
+    name:
+      - abcde
+      - flac
+    state: latest
+
+- name: Create AutoCDRipper directories
+  file:
+    path: "/usr/share/autocdripper"
+    state: directory
+
+- name: Create AutoCDRipper logs directory
+  file:
+    path: "/var/log/autocdripper"
+    state: directory
+    owner: ansible-nas
+
+- name: Copy AutoCDRipper execution script
+  copy:
+    src: files/autocdripper/cdripper.sh
+    dest: "/usr/share/autocdripper/cdripper.sh"
+    mode: u+rx,g=rx,o=rx
+
+- name: Copy AutoCDRipper abcde configuration
+  copy:
+    src: files/autocdripper/abcde.conf
+    dest: "/usr/share/autocdripper/abcde.conf"
+
+- name: Copy Systemd service file
+  copy:
+    src: files/autocdripper/autocdripper.service
+    dest: "/usr/share/autocdripper/autocdripper.service"
+
+- name: Create symbolic link for service
+  file:
+    src: "/usr/share/autocdripper/autocdripper.service"
+    dest: "/etc/systemd/system/autocdripper.service"
+    state: link
+
+- name: Copy Udev rule for automatic ripping
+  copy:
+    src: files/autocdripper/99-cd-audio-rip.rules
+    dest: "/etc/udev/rules.d/99-cd-audio-rip.rules"
+
+- name: Reload udev rules
+  shell: "udevadm control --reload"
+  become: yes
