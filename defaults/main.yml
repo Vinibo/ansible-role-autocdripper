@@ -1,0 +1,5 @@
+---
+cdrom_device_name: sr0
+
+extracted_music_path: /mnt/Volume3/music
+eject_when_done: y
